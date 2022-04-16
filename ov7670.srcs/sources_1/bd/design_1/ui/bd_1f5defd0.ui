@@ -1,0 +1,65 @@
+{
+   guistr: "# # String gsaved with Nlview 6.6.8  2016-12-21 bk=1.3817 VDI=40 GEI=35 GUI=JA:1.6
+#  -string -flagsOSRD
+preplace port xclk -pg 1 -y 700 -defaultsOSRD
+preplace port sioc -pg 1 -y 620 -defaultsOSRD
+preplace port camera_h_ref -pg 1 -y 290 -defaultsOSRD
+preplace port siod -pg 1 -y 640 -defaultsOSRD
+preplace port clk_in1 -pg 1 -y 620 -defaultsOSRD
+preplace port power_down -pg 1 -y 680 -defaultsOSRD
+preplace port VGA_V_SYNC -pg 1 -y 70 -defaultsOSRD
+preplace port VGA_H_SYNC -pg 1 -y 50 -defaultsOSRD
+preplace port camera_v_sync -pg 1 -y 260 -defaultsOSRD
+preplace port cntl_in2 -pg 1 -y 330 -defaultsOSRD
+preplace port pclk -pg 1 -y 230 -defaultsOSRD
+preplace port cntl_in -pg 1 -y 480 -defaultsOSRD
+preplace port resend_in -pg 1 -y 440 -defaultsOSRD
+preplace port reset -pg 1 -y 660 -defaultsOSRD
+preplace portBus last_add -pg 1 -y 190 -defaultsOSRD
+preplace portBus VGA_RED -pg 1 -y 90 -defaultsOSRD
+preplace portBus VGA_BLUE -pg 1 -y 110 -defaultsOSRD
+preplace portBus din -pg 1 -y 310 -defaultsOSRD
+preplace portBus VGA_GREEN -pg 1 -y 130 -defaultsOSRD
+preplace inst xlconstant_1 -pg 1 -lvl 1 -y 570 -defaultsOSRD
+preplace inst camera_capture_0 -pg 1 -lvl 4 -y 280 -defaultsOSRD
+preplace inst blk_mem_gen_0 -pg 1 -lvl 5 -y 350 -defaultsOSRD
+preplace inst camera_controller_0 -pg 1 -lvl 5 -y 750 -defaultsOSRD
+preplace inst button_0 -pg 1 -lvl 3 -y 450 -defaultsOSRD
+preplace inst counter_0 -pg 1 -lvl 5 -y 590 -defaultsOSRD
+preplace inst clk_wiz_0 -pg 1 -lvl 2 -y 610 -defaultsOSRD
+preplace inst VGA_0 -pg 1 -lvl 4 -y 80 -defaultsOSRD
+preplace netloc camera_v_sync_1 1 0 4 NJ 260 NJ 260 NJ 260 N
+preplace netloc cntl_in2_1 1 0 4 -10J 320 NJ 320 NJ 320 NJ
+preplace netloc xlconstant_1_dout 1 1 1 180J
+preplace netloc VGA_0_VGA_V_SYNC 1 4 2 NJ 50 1580J
+preplace netloc camera_controller_0_xclk 1 5 1 1590J
+preplace netloc clk_wiz_0_clk_12MHz 1 2 3 NJ 610 NJ 610 1170
+preplace netloc button_0_resend_out 1 3 2 NJ 430 1180
+preplace netloc camera_controller_0_power_down 1 5 1 1580J
+preplace netloc camera_h_ref_1 1 0 4 -10J 280 NJ 280 NJ 280 N
+preplace netloc clk_in1_1 1 0 2 NJ 620 NJ
+preplace netloc VGA_0_VGA_GREEN 1 4 2 NJ 110 1550J
+preplace netloc button_0_cntl_out 1 3 1 770
+preplace netloc resend_in_1 1 0 3 NJ 440 NJ 440 NJ
+preplace netloc camera_capture_0_last_addr 1 4 2 1170 190 NJ
+preplace netloc VGA_0_frame_addr 1 4 1 1220
+preplace netloc camera_capture_0_wr_en 1 4 1 1180
+preplace netloc din_1 1 0 4 -10J 300 NJ 300 NJ 300 N
+preplace netloc pclk_1 1 0 5 NJ 230 NJ 230 NJ 230 760 370 1200
+preplace netloc cntl_in_1 1 0 3 NJ 480 NJ 480 NJ
+preplace netloc VGA_0_VGA_RED 1 4 2 NJ 70 1570J
+preplace netloc Net 1 5 1 1560J
+preplace netloc blk_mem_gen_0_doutb 1 3 2 780 420 1190J
+preplace netloc VGA_0_VGA_BLUE 1 4 2 NJ 90 1560J
+preplace netloc VGA_0_VGA_H_SYNC 1 4 2 NJ 30 1590J
+preplace netloc camera_controller_0_sioc 1 5 1 1550J
+preplace netloc camera_controller_0_reset 1 5 1 1570J
+preplace netloc clk_wiz_0_clk_40MHz 1 2 3 470 370 750J 380 1170
+preplace netloc camera_capture_0_addr 1 4 1 1230
+preplace netloc camera_capture_0_dout 1 4 1 1210
+levelinfo -pg 1 -30 110 350 610 990 1410 1610 -top -20 -bot 850
+",
+}
+{
+   da_board_cnt: "3",
+}
