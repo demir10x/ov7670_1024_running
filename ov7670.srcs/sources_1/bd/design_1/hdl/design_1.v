@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.2 (win64) Build 1909853 Thu Jun 15 18:39:09 MDT 2017
-//Date        : Sat Apr 16 13:33:49 2022
+//Date        : Sat Apr 16 16:16:53 2022
 //Host        : LAPTOP-NVF9A6Q9 running 64-bit major release  (build 9200)
 //Command     : generate_target design_1.bd
 //Design      : design_1
@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-(* CORE_GENERATION_INFO = "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=8,numReposBlks=8,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=5,numPkgbdBlks=0,bdsource=USER,da_board_cnt=3,synth_mode=OOC_per_IP}" *) (* HW_HANDOFF = "design_1.hwdef" *) 
+(* CORE_GENERATION_INFO = "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=10,numReposBlks=10,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=6,numPkgbdBlks=0,bdsource=USER,da_board_cnt=3,synth_mode=OOC_per_IP}" *) (* HW_HANDOFF = "design_1.hwdef" *) 
 module design_1
    (VGA_BLUE,
     VGA_GREEN,
@@ -58,9 +58,10 @@ module design_1
   wire VGA_0_VGA_V_SYNC;
   wire [18:0]VGA_0_frame_addr;
   wire [11:0]blk_mem_gen_0_doutb;
+  wire [11:0]blk_mem_gen_1_doutb;
   wire button_0_cntl_out;
   wire button_0_resend_out;
-  (* DEBUG = "true" *) (* MARK_DEBUG *) wire [18:0]camera_capture_0_addr;
+  wire [18:0]camera_capture_0_addr;
   (* DEBUG = "true" *) (* MARK_DEBUG *) wire [11:0]camera_capture_0_dout;
   wire [17:0]camera_capture_0_last_addr;
   (* DEBUG = "true" *) (* MARK_DEBUG *) wire camera_capture_0_wr_en;
@@ -75,6 +76,9 @@ module design_1
   wire clk_wiz_0_clk_40MHz;
   wire cntl_in2_1;
   wire cntl_in_1;
+  wire [14:0]controller_1_0_address;
+  wire [12:0]controller_1_0_dout;
+  wire controller_1_0_write_enable;
   wire [7:0]din_1;
   wire pclk_1;
   wire resend_in_1;
@@ -106,16 +110,24 @@ module design_1
         .VGA_V_SYNC(VGA_0_VGA_V_SYNC),
         .cntl(button_0_cntl_out),
         .frame_addr(VGA_0_frame_addr),
-        .frame_pix(blk_mem_gen_0_doutb),
+        .frame_pix(blk_mem_gen_1_doutb),
         .pix_clk(clk_wiz_0_clk_40MHz));
   design_1_blk_mem_gen_0_1 blk_mem_gen_0
        (.addra(camera_capture_0_addr[14:0]),
-        .addrb(VGA_0_frame_addr[14:0]),
+        .addrb(controller_1_0_address),
         .clka(pclk_1),
-        .clkb(clk_wiz_0_clk_40MHz),
+        .clkb(pclk_1),
         .dina(camera_capture_0_dout),
         .doutb(blk_mem_gen_0_doutb),
         .wea(camera_capture_0_wr_en));
+  design_1_blk_mem_gen_1_0 blk_mem_gen_1
+       (.addra(controller_1_0_address),
+        .addrb(VGA_0_frame_addr[14:0]),
+        .clka(pclk_1),
+        .clkb(clk_wiz_0_clk_40MHz),
+        .dina(controller_1_0_dout[11:0]),
+        .doutb(blk_mem_gen_1_doutb),
+        .wea(controller_1_0_write_enable));
   design_1_button_0_0 button_0
        (.clk(clk_wiz_0_clk_40MHz),
         .cntl_in(cntl_in_1),
@@ -146,6 +158,13 @@ module design_1
         .clk_40MHz(clk_wiz_0_clk_40MHz),
         .clk_in1(clk_in1_1),
         .reset(xlconstant_1_dout));
+  design_1_controller_1_0_0 controller_1_0
+       (.address(controller_1_0_address),
+        .button(cntl_in2_1),
+        .clk(clk_wiz_0_clk_40MHz),
+        .din(blk_mem_gen_0_doutb),
+        .dout(controller_1_0_dout),
+        .write_enable(controller_1_0_write_enable));
   design_1_counter_0_0 counter_0
        (.pclk(pclk_1));
   design_1_xlconstant_1_0 xlconstant_1

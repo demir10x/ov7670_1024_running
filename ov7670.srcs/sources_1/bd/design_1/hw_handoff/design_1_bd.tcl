@@ -40,7 +40,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# VGA, button, camera_capture, camera_controller, counter
+# VGA, button, camera_capture, camera_controller, controller_1, counter
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -222,6 +222,32 @@ CONFIG.Write_Width_B {12} \
 CONFIG.use_bram_block {Stand_Alone} \
  ] $blk_mem_gen_0
 
+  # Create instance: blk_mem_gen_1, and set properties
+  set blk_mem_gen_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.3 blk_mem_gen_1 ]
+  set_property -dict [ list \
+CONFIG.Byte_Size {9} \
+CONFIG.Enable_32bit_Address {false} \
+CONFIG.Enable_A {Always_Enabled} \
+CONFIG.Enable_B {Always_Enabled} \
+CONFIG.Fill_Remaining_Memory_Locations {false} \
+CONFIG.Memory_Type {Simple_Dual_Port_RAM} \
+CONFIG.Operating_Mode_A {NO_CHANGE} \
+CONFIG.Port_A_Write_Rate {50} \
+CONFIG.Port_B_Clock {100} \
+CONFIG.Port_B_Enable_Rate {100} \
+CONFIG.Read_Width_A {12} \
+CONFIG.Read_Width_B {12} \
+CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
+CONFIG.Register_PortB_Output_of_Memory_Primitives {false} \
+CONFIG.Use_Byte_Write_Enable {false} \
+CONFIG.Use_RSTA_Pin {false} \
+CONFIG.Use_RSTB_Pin {false} \
+CONFIG.Write_Depth_A {19200} \
+CONFIG.Write_Width_A {12} \
+CONFIG.Write_Width_B {12} \
+CONFIG.use_bram_block {Stand_Alone} \
+ ] $blk_mem_gen_1
+
   # Create instance: button_0, and set properties
   set block_name button
   set block_cell_name button_0
@@ -286,6 +312,17 @@ CONFIG.MMCM_DIVCLK_DIVIDE {1} \
 CONFIG.NUM_OUT_CLKS {4} \
  ] $clk_wiz_0
 
+  # Create instance: controller_1_0, and set properties
+  set block_name controller_1
+  set block_cell_name controller_1_0
+  if { [catch {set controller_1_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_msg_id "BD_TCL-105" "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $controller_1_0 eq "" } {
+     catch {common::send_msg_id "BD_TCL-106" "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create instance: counter_0, and set properties
   set block_name counter
   set block_cell_name counter_0
@@ -310,14 +347,12 @@ CONFIG.CONST_VAL {0} \
   connect_bd_net -net VGA_0_VGA_H_SYNC [get_bd_ports VGA_H_SYNC] [get_bd_pins VGA_0/VGA_H_SYNC]
   connect_bd_net -net VGA_0_VGA_RED [get_bd_ports VGA_RED] [get_bd_pins VGA_0/VGA_RED]
   connect_bd_net -net VGA_0_VGA_V_SYNC [get_bd_ports VGA_V_SYNC] [get_bd_pins VGA_0/VGA_V_SYNC]
-  connect_bd_net -net VGA_0_frame_addr [get_bd_pins VGA_0/frame_addr] [get_bd_pins blk_mem_gen_0/addrb]
-  connect_bd_net -net blk_mem_gen_0_doutb [get_bd_pins VGA_0/frame_pix] [get_bd_pins blk_mem_gen_0/doutb]
+  connect_bd_net -net VGA_0_frame_addr [get_bd_pins VGA_0/frame_addr] [get_bd_pins blk_mem_gen_1/addrb]
+  connect_bd_net -net blk_mem_gen_0_doutb [get_bd_pins blk_mem_gen_0/doutb] [get_bd_pins controller_1_0/din]
+  connect_bd_net -net blk_mem_gen_1_doutb [get_bd_pins VGA_0/frame_pix] [get_bd_pins blk_mem_gen_1/doutb]
   connect_bd_net -net button_0_cntl_out [get_bd_pins VGA_0/cntl] [get_bd_pins button_0/cntl_out]
   connect_bd_net -net button_0_resend_out [get_bd_pins button_0/resend_out] [get_bd_pins camera_controller_0/resend]
   connect_bd_net -net camera_capture_0_addr [get_bd_pins blk_mem_gen_0/addra] [get_bd_pins camera_capture_0/addr]
-  set_property -dict [ list \
-HDL_ATTRIBUTE.DEBUG {true} \
- ] [get_bd_nets camera_capture_0_addr]
   connect_bd_net -net camera_capture_0_dout [get_bd_pins blk_mem_gen_0/dina] [get_bd_pins camera_capture_0/dout]
   set_property -dict [ list \
 HDL_ATTRIBUTE.DEBUG {true} \
@@ -335,11 +370,14 @@ HDL_ATTRIBUTE.DEBUG {true} \
   connect_bd_net -net camera_v_sync_1 [get_bd_ports camera_v_sync] [get_bd_pins camera_capture_0/camera_v_sync]
   connect_bd_net -net clk_in1_1 [get_bd_ports clk_in1] [get_bd_pins clk_wiz_0/clk_in1]
   connect_bd_net -net clk_wiz_0_clk_12MHz [get_bd_pins camera_controller_0/clk] [get_bd_pins clk_wiz_0/clk_12MHz]
-  connect_bd_net -net clk_wiz_0_clk_40MHz [get_bd_pins VGA_0/pix_clk] [get_bd_pins blk_mem_gen_0/clkb] [get_bd_pins button_0/clk] [get_bd_pins clk_wiz_0/clk_40MHz]
-  connect_bd_net -net cntl_in2_1 [get_bd_ports cntl_in2] [get_bd_pins camera_capture_0/cntl_in2]
+  connect_bd_net -net clk_wiz_0_clk_40MHz [get_bd_pins VGA_0/pix_clk] [get_bd_pins blk_mem_gen_1/clkb] [get_bd_pins button_0/clk] [get_bd_pins clk_wiz_0/clk_40MHz] [get_bd_pins controller_1_0/clk]
+  connect_bd_net -net cntl_in2_1 [get_bd_ports cntl_in2] [get_bd_pins camera_capture_0/cntl_in2] [get_bd_pins controller_1_0/button]
   connect_bd_net -net cntl_in_1 [get_bd_ports cntl_in] [get_bd_pins button_0/cntl_in]
+  connect_bd_net -net controller_1_0_address [get_bd_pins blk_mem_gen_0/addrb] [get_bd_pins blk_mem_gen_1/addra] [get_bd_pins controller_1_0/address]
+  connect_bd_net -net controller_1_0_dout [get_bd_pins blk_mem_gen_1/dina] [get_bd_pins controller_1_0/dout]
+  connect_bd_net -net controller_1_0_write_enable [get_bd_pins blk_mem_gen_1/wea] [get_bd_pins controller_1_0/write_enable]
   connect_bd_net -net din_1 [get_bd_ports din] [get_bd_pins camera_capture_0/din]
-  connect_bd_net -net pclk_1 [get_bd_ports pclk] [get_bd_pins blk_mem_gen_0/clka] [get_bd_pins camera_capture_0/pclk] [get_bd_pins counter_0/pclk]
+  connect_bd_net -net pclk_1 [get_bd_ports pclk] [get_bd_pins blk_mem_gen_0/clka] [get_bd_pins blk_mem_gen_0/clkb] [get_bd_pins blk_mem_gen_1/clka] [get_bd_pins camera_capture_0/pclk] [get_bd_pins counter_0/pclk]
   connect_bd_net -net resend_in_1 [get_bd_ports resend_in] [get_bd_pins button_0/resend_in]
   connect_bd_net -net xlconstant_1_dout [get_bd_pins clk_wiz_0/reset] [get_bd_pins xlconstant_1/dout]
 
