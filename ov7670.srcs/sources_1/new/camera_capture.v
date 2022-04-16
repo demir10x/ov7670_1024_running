@@ -41,7 +41,7 @@ module camera_capture#(
 	reg [1:0]	write_state;
 	reg [15:0]	latced_data;
    reg [1:0] status;
-	reg row_en, column_en;
+	reg [3:0] row_en, column_en;
 	
 	
 	initial begin
@@ -50,8 +50,8 @@ module camera_capture#(
 		address <= 0;
 		address_next <= 0;
       status <=0;
-		row_en <=0;
-		column_en <=0;
+		row_en <=4'b1000;
+		column_en <=4'b1000;
 	end
 
     assign addr = address;
@@ -59,10 +59,10 @@ module camera_capture#(
 	// When camera_v_sync == 1, the OV7670 starts to send the new video frame data
 	// when camera_h_ref == 1, the OV7670 starts to send the pix data starting from RED, GREEN, BLUE;
 	   always @(posedge camera_h_ref)
-		row_en <= ~row_en;
+		row_en <= {row_en[2:0],row_en[3]};
 		
 		always @(posedge write_state[1])
-		column_en <= ~column_en;
+		column_en <= {column_en[2:0],column_en[3]};
 		
 		always @(posedge pclk) 
 		begin
@@ -91,7 +91,7 @@ module camera_capture#(
 			  write_state <= {write_state[0], (camera_h_ref & ~write_state[0])};
 			  latced_data <= {latced_data[DATA_IN_WIDTH-1:0], din};
 
-		     if( write_state[1] == 1'b1 && row_en == 1 && column_en == 1) 
+		     if( write_state[1] == 1'b1 && row_en[3] == 1 && column_en[3] == 1) 
 		        begin  	
 			     wr_en <= 1'b1;
 	           address <= address + 1;

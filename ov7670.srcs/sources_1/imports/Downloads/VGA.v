@@ -13,8 +13,8 @@ module VGA #(
     parameter ADDR_WIDTH = 19,
     parameter PIX_WIDTH = 12,
     parameter VGABIT_WIDTH = 4,
-    parameter CAMERA_WIDTH = 320,  
-    parameter CAMERA_HEIGHT = 240  
+    parameter CAMERA_WIDTH = 160,  
+    parameter CAMERA_HEIGHT = 120  
 )
 (
     input   wire    pix_clk,
